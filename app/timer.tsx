@@ -7,6 +7,14 @@ import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer } from "../services/timer";
 import CircularGauge from "../components/CircularGauge";
 
+function formatDuration(secs: number): string {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  if (m > 0 && s > 0) return `${m}분 ${s}초`;
+  if (m > 0) return `${m}분`;
+  return `${s}초`;
+}
+
 export default function TimerScreen() {
   const router = useRouter();
   const { plan } = useRecommendStore();
@@ -100,7 +108,11 @@ export default function TimerScreen() {
       <Text style={[styles.phaseTitle, phaseColor]}>{phaseTitle}</Text>
       <Text style={styles.phaseDesc}>{phaseDescription}</Text>
       <Text style={styles.workoutConfig}>
-        {plan.workSecs}초 운동 / {plan.restSecs}초 휴식 × {plan.sets}세트
+        {phase === "warmup"
+          ? formatDuration(plan.warmupSecs)
+          : phase === "cooldown"
+          ? formatDuration(plan.cooldownSecs)
+          : `${plan.workSecs}초 운동 / ${plan.restSecs}초 휴식 × ${plan.sets}세트`}
       </Text>
 
       <View style={styles.gaugeWrapper}>
