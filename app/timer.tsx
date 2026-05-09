@@ -7,6 +7,8 @@ import { useRouter } from "expo-router";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const TICK_SOUND = require("../assets/sounds/tick.wav");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const TICK_REST_SOUND = require("../assets/sounds/tick_rest.wav");
 import { useTimerStore } from "../stores/timerStore";
 import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer, TimerPhase } from "../services/timer";
@@ -44,13 +46,20 @@ export default function TimerScreen() {
   const prevPhaseRef = useRef<TimerPhase>("idle");
   const soundOptionRef = useRef(soundOption);
   const tickSoundRef = useRef<Audio.Sound | null>(null);
+  const tickRestSoundRef = useRef<Audio.Sound | null>(null);
   useEffect(() => { soundOptionRef.current = soundOption; }, [soundOption]);
 
   useEffect(() => {
     Audio.Sound.createAsync(TICK_SOUND)
       .then(({ sound }) => { tickSoundRef.current = sound; })
       .catch(() => {});
-    return () => { tickSoundRef.current?.unloadAsync(); };
+    Audio.Sound.createAsync(TICK_REST_SOUND)
+      .then(({ sound }) => { tickRestSoundRef.current = sound; })
+      .catch(() => {});
+    return () => {
+      tickSoundRef.current?.unloadAsync();
+      tickRestSoundRef.current?.unloadAsync();
+    };
   }, []);
   const {
     phase,
@@ -80,7 +89,8 @@ export default function TimerScreen() {
         if (tick.remainingSecs === 0) {
           vibrate(tick.phase === "rest" ? 4 : 8);
         } else if (tick.remainingSecs <= 3 && soundOptionRef.current !== "none") {
-          tickSoundRef.current?.replayAsync().catch(() => {});
+          const sound = tick.phase === "rest" ? tickRestSoundRef.current : tickSoundRef.current;
+          sound?.replayAsync().catch(() => {});
         }
         if (tick.phase !== prevPhaseRef.current) {
           prevPhaseRef.current = tick.phase;
