@@ -72,12 +72,15 @@ app.post("/api/recommend", async (req, res) => {
     const cleaned = text.replace(/```json|```/g, "").trim();
     const plan = JSON.parse(cleaned);
 
-    // 목표 시간과 합계가 다를 경우 cooldownSecs로 보정
+    // 준비/정리운동 각각 10% 이내로 고정, 나머지 80%를 본운동으로 채움
     if (context.goalMinutes) {
-      const targetSecs = context.goalMinutes * 60;
-      const mainSecs = (plan.workSecs + plan.restSecs) * plan.sets;
-      const remaining = targetSecs - plan.warmupSecs - mainSecs;
-      plan.cooldownSecs = Math.max(0, remaining);
+      const totalSecs = context.goalMinutes * 60;
+      const maxEach = Math.floor(totalSecs * 0.1);
+      plan.warmupSecs = Math.min(plan.warmupSecs, maxEach);
+      const perSet = plan.workSecs + plan.restSecs;
+      const mainTarget = totalSecs - plan.warmupSecs - maxEach;
+      plan.sets = Math.max(1, Math.round(mainTarget / perSet));
+      plan.cooldownSecs = Math.max(0, totalSecs - plan.warmupSecs - plan.sets * perSet);
     }
 
     res.json(plan);
