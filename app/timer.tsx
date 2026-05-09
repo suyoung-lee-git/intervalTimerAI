@@ -52,7 +52,7 @@ export default function TimerScreen() {
       (tick) => {
         setTick(tick);
         if (tick.remainingSecs === 0) {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         }
       },
       () => {
