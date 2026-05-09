@@ -106,7 +106,7 @@ export default function TimerScreen() {
                 tick.phase === "rest"     ? `${formatDuration(plan.restSecs)} 동안 진행합니다.` :
                 tick.phase === "cooldown" ? `${formatDuration(plan.cooldownSecs)} 동안 진행합니다.` :
                 "";
-              const text = stripEmoji([title, duration, body].filter(Boolean).join(". "));
+              const text = stripEmoji([title, body, duration].filter(Boolean).join(". "));
               Speech.speak(text, { language: "ko-KR" });
             }
           }
