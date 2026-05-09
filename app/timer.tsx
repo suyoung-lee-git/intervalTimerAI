@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
+import * as Speech from "expo-speech";
 import { useRouter } from "expo-router";
 import { useTimerStore } from "../stores/timerStore";
 import { useRecommendStore } from "../stores/recommendStore";
-import { startTimer } from "../services/timer";
+import { startTimer, TimerPhase } from "../services/timer";
 import CircularGauge from "../components/CircularGauge";
 
 function vibrate(pulses: number) {
@@ -31,7 +32,10 @@ function formatDuration(secs: number): string {
 
 export default function TimerScreen() {
   const router = useRouter();
-  const { plan } = useRecommendStore();
+  const { plan, soundOption } = useRecommendStore();
+  const prevPhaseRef = useRef<TimerPhase>("idle");
+  const soundOptionRef = useRef(soundOption);
+  useEffect(() => { soundOptionRef.current = soundOption; }, [soundOption]);
   const {
     phase,
     remainingSecs,
@@ -60,16 +64,45 @@ export default function TimerScreen() {
         if (tick.remainingSecs === 0) {
           vibrate(tick.phase === "rest" ? 4 : 8);
         }
+        if (tick.phase !== prevPhaseRef.current) {
+          prevPhaseRef.current = tick.phase;
+          if (soundOptionRef.current !== "none" && plan) {
+            const ex = plan.exercises[(tick.currentSet - 1) % plan.exercises.length];
+            const title =
+              tick.phase === "warmup" ? "준비운동" :
+              tick.phase === "work"   ? `${ex.name} ${ex.reps}` :
+              tick.phase === "rest"   ? "휴식" :
+              tick.phase === "cooldown" ? "정리운동" : "";
+            const body =
+              tick.phase === "warmup" ? plan.warmup :
+              tick.phase === "work"   ? ex.tips :
+              tick.phase === "rest"   ? REST_MESSAGES[(tick.currentSet - 1) % REST_MESSAGES.length] :
+              tick.phase === "cooldown" ? plan.cooldown : "";
+            if (soundOptionRef.current === "beep") {
+              Speech.speak("삐", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
+            } else {
+              Speech.stop();
+              const text = body ? `${title}. ${body}` : title;
+              Speech.speak(text, { language: "ko-KR" });
+            }
+          }
+        }
       },
       () => {
         setCompleted();
         vibrate(12);
+        if (soundOptionRef.current === "beep") {
+          Speech.speak("삐", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
+        } else if (soundOptionRef.current === "tts") {
+          Speech.stop();
+          Speech.speak("운동 완료. 수고하셨습니다!", { language: "ko-KR" });
+        }
       }
     );
     setStopFn(stop);
     setRunning(true);
     vibrate(12);
-    return () => stop();
+    return () => { stop(); Speech.stop(); };
   }, [plan, reset, setTick, setStopFn, setCompleted, setRunning]);
 
   const handleStop = () => {

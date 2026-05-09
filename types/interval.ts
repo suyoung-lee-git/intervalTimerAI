@@ -1,5 +1,7 @@
 export type FitnessLevel = "beginner" | "intermediate" | "advanced";
 
+export type SoundOption = "none" | "beep" | "tts";
+
 export type WorkoutType =
   | "HIIT"
   | "tabata"

@@ -1,10 +1,17 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useRecommendStore } from "../stores/recommendStore";
+import { SoundOption } from "../types/interval";
+
+const SOUND_OPTIONS: { value: SoundOption; label: string }[] = [
+  { value: "none", label: "사운드없음" },
+  { value: "beep", label: "단음" },
+  { value: "tts", label: "문장읽기" },
+];
 
 export default function PlanScreen() {
   const router = useRouter();
-  const { plan } = useRecommendStore();
+  const { plan, soundOption, setSoundOption } = useRecommendStore();
 
   if (!plan) return null;
 
@@ -45,6 +52,21 @@ export default function PlanScreen() {
       <Section title="정리운동" duration={plan.cooldownSecs}>
         <Text style={styles.body}>{plan.cooldown}</Text>
       </Section>
+
+      {/* 사운드 옵션 */}
+      <View style={styles.soundRow}>
+        {SOUND_OPTIONS.map((item) => (
+          <TouchableOpacity
+            key={item.value}
+            style={[styles.soundChip, soundOption === item.value && styles.soundChipActive]}
+            onPress={() => setSoundOption(item.value)}
+          >
+            <Text style={[styles.soundChipText, soundOption === item.value && styles.soundChipTextActive]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       {/* 타이머 시작 */}
       <TouchableOpacity
@@ -137,6 +159,23 @@ const styles = StyleSheet.create({
     color: "#FF9500",
     textAlign: "center",
   },
+  soundRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 12,
+  },
+  soundChip: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: "#ddd",
+    backgroundColor: "#fff",
+  },
+  soundChipActive: { borderColor: "#007AFF", backgroundColor: "#007AFF" },
+  soundChipText: { fontSize: 13, fontWeight: "600", color: "#444" },
+  soundChipTextActive: { color: "#fff" },
   button: {
     marginTop: 8,
     backgroundColor: "#007AFF",
