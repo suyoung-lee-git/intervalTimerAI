@@ -14,8 +14,10 @@ const CENTER = RADIUS + STROKE;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 const PHASE_COLOR: Record<TimerPhase, string> = {
+  warmup: "#FFCC00",
   work: "#FF3B30",
   rest: "#34C759",
+  cooldown: "#5AC8FA",
   idle: "#C7C7CC",
 };
 

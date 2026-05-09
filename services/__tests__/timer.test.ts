@@ -1,4 +1,4 @@
-import { startTimer } from "../timer";
+import { startTimer, TimerTick } from "../timer";
 
 jest.useFakeTimers();
 
@@ -6,8 +6,8 @@ describe("startTimer", () => {
   afterEach(() => jest.clearAllTimers());
 
   it("첫 tick에 work 페이즈와 workSecs를 반환한다", () => {
-    const ticks: Parameters<Parameters<typeof startTimer>[3]>[0][] = [];
-    const stop = startTimer(20, 10, 2, (tick) => ticks.push(tick), jest.fn());
+    const ticks: TimerTick[] = [];
+    const stop = startTimer(0, 20, 10, 2, 0, (tick) => ticks.push(tick), jest.fn());
 
     jest.advanceTimersByTime(1000);
     expect(ticks[0]).toMatchObject({ phase: "work", remainingSecs: 20 });
@@ -16,8 +16,8 @@ describe("startTimer", () => {
   });
 
   it("workSecs 후 rest 페이즈로 전환된다", () => {
-    const ticks: Parameters<Parameters<typeof startTimer>[3]>[0][] = [];
-    const stop = startTimer(2, 10, 1, (tick) => ticks.push(tick), jest.fn());
+    const ticks: TimerTick[] = [];
+    const stop = startTimer(0, 2, 10, 1, 0, (tick) => ticks.push(tick), jest.fn());
 
     jest.advanceTimersByTime(4000);
     const phases = ticks.map((t) => t.phase);
@@ -28,20 +28,42 @@ describe("startTimer", () => {
 
   it("모든 세트 완료 후 onComplete를 호출한다", () => {
     const onComplete = jest.fn();
-    startTimer(1, 1, 1, jest.fn(), onComplete);
+    startTimer(0, 1, 1, 1, 0, jest.fn(), onComplete);
 
     jest.advanceTimersByTime(5000);
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
   it("stop 함수 호출 시 타이머가 중단된다", () => {
-    const ticks: unknown[] = [];
-    const stop = startTimer(10, 5, 3, (t) => ticks.push(t), jest.fn());
+    const ticks: TimerTick[] = [];
+    const stop = startTimer(0, 10, 5, 3, 0, (t) => ticks.push(t), jest.fn());
 
     jest.advanceTimersByTime(2000);
     const countBefore = ticks.length;
     stop();
     jest.advanceTimersByTime(5000);
     expect(ticks.length).toBe(countBefore);
+  });
+
+  it("warmupSecs > 0이면 warmup 페이즈로 시작한다", () => {
+    const ticks: TimerTick[] = [];
+    const stop = startTimer(5, 20, 10, 2, 0, (tick) => ticks.push(tick), jest.fn());
+
+    jest.advanceTimersByTime(1000);
+    expect(ticks[0]).toMatchObject({ phase: "warmup", remainingSecs: 5 });
+
+    stop();
+  });
+
+  it("warmup 완료 후 work 페이즈로 전환된다", () => {
+    const ticks: TimerTick[] = [];
+    const stop = startTimer(1, 20, 10, 1, 0, (tick) => ticks.push(tick), jest.fn());
+
+    jest.advanceTimersByTime(4000);
+    const phases = ticks.map((t) => t.phase);
+    expect(phases).toContain("warmup");
+    expect(phases).toContain("work");
+
+    stop();
   });
 });

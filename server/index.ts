@@ -21,9 +21,11 @@ Given the user's workout context, recommend an optimal interval timer configurat
 
 Always respond with a valid JSON object in this exact format (no markdown, no code block):
 {
+  "warmupSecs": <number, warmup duration in seconds>,
   "workSecs": <number, work interval in seconds>,
   "restSecs": <number, rest interval in seconds>,
   "sets": <number, total number of sets>,
+  "cooldownSecs": <number, cooldown duration in seconds>,
   "rationale": "<Korean explanation of why this configuration suits the user>",
   "exercises": [
     { "name": "<운동 이름>", "reps": "<횟수 또는 시간, 예: 10회 또는 45초간>", "tips": "<한국어 동작 팁>" }
@@ -34,6 +36,8 @@ Always respond with a valid JSON object in this exact format (no markdown, no co
 }
 
 Guidelines:
+- warmupSecs: 120~300 seconds recommended
+- cooldownSecs: 120~300 seconds recommended
 - exercises: 3-5 exercises appropriate for the workout type and fitness level
 - estimatedCalories: estimate based on workout duration, intensity and average body weight (70kg)
 - Beginners: longer rest ratios (1:2 work:rest), fewer sets

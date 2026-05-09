@@ -2,25 +2,23 @@
 2026-05-09
 
 ## Completed
-- 백엔드 API 서버 추가 (server/index.ts — Express + Claude 3 Haiku)
-- 홈/타이머 UI 개선 (칩 버튼, SVG 원형 게이지)
-- AI 추천 결과 상세화: exercises, warmup, cooldown, estimatedCalories 추가
-- app/plan.tsx 신규 생성 (추천 결과 상세 화면)
-- 플로우 변경: 홈 → 추천 결과(plan) → 타이머
+- 준비운동/정리운동 타이머 단계 추가 (warmup→work→rest×sets→cooldown 흐름)
+- 타이머 화면에 현재 운동명 표시 (work phase: 운동명 순환, warmup/cooldown/rest: 텍스트)
+- CircularGauge warmup(노랑)·cooldown(파랑) 색상 추가
+- types/interval.ts: warmupSecs, cooldownSecs 필드 추가
+- server/index.ts: SYSTEM_PROMPT에 warmupSecs·cooldownSecs 반환 추가
 
 ## In Progress
 - 없음
 
 ## Next
-- git 커밋
+- git 커밋 & push
 - 앱 완성도 개선 (로딩 UX, 에러 처리 등)
 - 프로덕션 배포 (EAS Build / 서버 PM2 설정)
 
 ## Decisions & Context
-- AnthropicBedrock 생성자 오버로드 타입 제약으로 키 유무에 따라 분기 처리
-  (awsAccessKey + awsSecretKey 동시 제공 or 둘 다 생략 — 하나만 제공은 타입 에러)
-- react-native-svg 설치 시 npm peer dependency 충돌 → .npmrc에 legacy-peer-deps=true 추가
-- CircularGauge: phaseTotalSecs(현재 단계 총 시간)를 timer.ts tick에 추가해서 진행률 계산
+- warmupSecs/cooldownSecs가 0이면 해당 phase 건너뜀 (서버 응답이 0을 반환해도 안전하게 동작)
+- 운동 이름은 (currentSet - 1) % exercises.length 순환 — 세트 수 > 운동 수여도 안전
 
 ## Blockers
 - 없음

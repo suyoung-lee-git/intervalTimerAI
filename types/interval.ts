@@ -22,9 +22,11 @@ export interface Exercise {
 }
 
 export interface IntervalPlan {
+  warmupSecs: number;
   workSecs: number;
   restSecs: number;
   sets: number;
+  cooldownSecs: number;
   rationale: string;
   exercises: Exercise[];
   warmup: string;
