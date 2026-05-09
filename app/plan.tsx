@@ -17,17 +17,17 @@ export default function PlanScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 준비운동 */}
-      <Section title="준비운동" duration={plan.warmupSecs}>
-        <Text style={styles.body}>{plan.warmup}</Text>
-      </Section>
-
       {/* 운동 구성 */}
       <Section title="운동 구성">
         <Text style={styles.config}>
           {plan.workSecs}초 운동  /  {plan.restSecs}초 휴식  ×  {plan.sets}세트
         </Text>
         <Text style={styles.rationale}>{plan.rationale}</Text>
+      </Section>
+
+      {/* 준비운동 */}
+      <Section title="준비운동" duration={plan.warmupSecs}>
+        <Text style={styles.body}>{plan.warmup}</Text>
       </Section>
 
       {/* 세트별 운동 목록 */}
@@ -43,14 +43,14 @@ export default function PlanScreen() {
         ))}
       </Section>
 
-      {/* 예상 칼로리 */}
-      <Section title="예상 칼로리 소모">
-        <Text style={styles.calories}>약 {plan.estimatedCalories} kcal</Text>
-      </Section>
-
       {/* 정리운동 */}
       <Section title="정리운동" duration={plan.cooldownSecs}>
         <Text style={styles.body}>{plan.cooldown}</Text>
+      </Section>
+
+      {/* 예상 칼로리 */}
+      <Section title="예상 칼로리 소모">
+        <Text style={styles.calories}>약 {plan.estimatedCalories} kcal</Text>
       </Section>
 
       {/* 사운드 옵션 */}
