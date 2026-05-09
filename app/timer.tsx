@@ -131,13 +131,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 24,
   },
-  plan: { fontSize: 15, color: "#666", marginBottom: 4 },
+  plan: { fontSize: 18, fontWeight: "600", color: "#444", marginBottom: 4 },
   rationale: {
-    fontSize: 13,
-    color: "#999",
+    fontSize: 16,
+    color: "#666",
     textAlign: "center",
     marginBottom: 40,
     paddingHorizontal: 16,
+    lineHeight: 24,
   },
   gaugeWrapper: {
     width: 220,
