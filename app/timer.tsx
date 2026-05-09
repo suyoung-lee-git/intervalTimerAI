@@ -27,7 +27,7 @@ const REST_MESSAGES = [
 ];
 
 function stripEmoji(text: string): string {
-  return text.replace(/\p{Emoji}/gu, "").replace(/\s+/g, " ").trim();
+  return text.replace(/\p{Extended_Pictographic}/gu, "").replace(/\s+/g, " ").trim();
 }
 
 function formatDuration(secs: number): string {
