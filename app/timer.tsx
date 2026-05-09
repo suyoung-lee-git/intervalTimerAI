@@ -63,11 +63,12 @@ export default function TimerScreen() {
       },
       () => {
         setCompleted();
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        vibrate(12);
       }
     );
     setStopFn(stop);
     setRunning(true);
+    vibrate(12);
     return () => stop();
   }, [plan, reset, setTick, setStopFn, setCompleted, setRunning]);
 
