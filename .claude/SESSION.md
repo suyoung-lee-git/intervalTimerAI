@@ -2,11 +2,11 @@
 2026-05-09
 
 ## Completed
-- 준비운동/정리운동 타이머 단계 추가 (warmup→work→rest×sets→cooldown 흐름)
-- 타이머 화면에 현재 운동명 표시 (work phase: 운동명 순환, warmup/cooldown/rest: 텍스트)
-- CircularGauge warmup(노랑)·cooldown(파랑) 색상 추가
-- types/interval.ts: warmupSecs, cooldownSecs 필드 추가
-- server/index.ts: SYSTEM_PROMPT에 warmupSecs·cooldownSecs 반환 추가
+- SYSTEM_PROMPT 강화: rationale/warmup/cooldown 텍스트에 숫자·단위 STRICTLY FORBIDDEN 명시
+- services/timer.ts: startTimer 시작 시 즉시 첫 tick 발송 — idle phase 1초 깜빡임 제거
+- server/index.ts: rationale 서버측 숫자 제거 regex 추가
+- 사운드 옵션 (none/beep/tts), TTS 읽기 순서 (타이틀→내용→시간), 이모지 제거
+- 종료 3초전 틱틱틱 소리 (work: tick.wav, rest: tick_rest.wav)
 
 ## In Progress
 - 없음

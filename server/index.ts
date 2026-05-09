@@ -26,12 +26,12 @@ Always respond with a valid JSON object in this exact format (no markdown, no co
   "restSecs": <number, rest interval in seconds>,
   "sets": <number, total number of sets>,
   "cooldownSecs": <number, cooldown duration in seconds>,
-  "rationale": "<Korean explanation of why this configuration suits the user. Do NOT mention specific numbers like seconds, sets, or minutes — those are displayed separately>",
+  "rationale": "<RULE: Korean explanation of WHY this configuration suits the user's goal and fitness level. STRICTLY FORBIDDEN: any digits, any Korean number words (e.g. 초, 분, 세트, 회, 번), any ratios (e.g. 1:1, 2:1). Mention ONLY concepts like intensity, recovery, endurance, suitability — not specific values. The app already shows all numbers separately; duplicating them here will confuse the user and break the UI.>",
   "exercises": [
     { "name": "<운동 이름>", "reps": "<횟수 또는 시간, 예: 10회 또는 45초간>", "tips": "<한국어 동작 팁>" }
   ],
-  "warmup": "<Korean warmup instruction, 2-3 sentences describing WHAT TO DO only. NEVER include any time/duration (e.g. '5분', '3분간', '몇 분' are all forbidden)>",
-  "cooldown": "<Korean cooldown instruction, 2-3 sentences describing WHAT TO DO only. NEVER include any time/duration (e.g. '5분', '3분간', '몇 분' are all forbidden)>",
+  "warmup": "<RULE: Korean description of warmup movements ONLY — what to do, not how long. STRICTLY FORBIDDEN: any digits or time expressions of any form (초, 분, ~간, ~동안, ~분간, 몇 분, etc.). Only describe body movements and actions.>",
+  "cooldown": "<RULE: Korean description of cooldown movements ONLY — what to do, not how long. STRICTLY FORBIDDEN: any digits or time expressions of any form (초, 분, ~간, ~동안, ~분간, 몇 분, etc.). Only describe body movements and actions.>",
   "estimatedCalories": <number, estimated calories burned>
 }
 
@@ -46,7 +46,8 @@ Guidelines:
 - Beginners: longer rest ratios (1:2 work:rest), fewer sets
 - Intermediate: balanced ratios (1:1), moderate sets
 - Advanced: shorter rest ratios (2:1), more sets
-- Tabata: fixed 20s work / 10s rest / 8 sets (adjust warmup/cooldown to fit total time)`;
+- Tabata: fixed 20s work / 10s rest / 8 sets (adjust warmup/cooldown to fit total time)
+- TEXT FIELD NUMBERS FORBIDDEN: rationale, warmup, cooldown MUST NOT contain any digits or unit words (초, 분, 세트, 회, 번). Numbers belong only in numeric fields (warmupSecs, workSecs, etc.).`;
 
 const client =
   process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY

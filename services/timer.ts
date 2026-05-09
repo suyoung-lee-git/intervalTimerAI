@@ -29,6 +29,8 @@ export function startTimer(
     return 0;
   };
 
+  onTick({ phase, remainingSecs: remaining, currentSet, totalSets, phaseTotalSecs: phaseTotalFor(phase) });
+
   const interval = setInterval(() => {
     onTick({
       phase,
