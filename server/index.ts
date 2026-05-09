@@ -30,8 +30,8 @@ Always respond with a valid JSON object in this exact format (no markdown, no co
   "exercises": [
     { "name": "<운동 이름>", "reps": "<횟수 또는 시간, 예: 10회 또는 45초간>", "tips": "<한국어 동작 팁>" }
   ],
-  "warmup": "<Korean warmup instruction, 2-3 sentences>",
-  "cooldown": "<Korean cooldown instruction, 2-3 sentences>",
+  "warmup": "<Korean warmup instruction, 2-3 sentences. Do NOT mention specific duration or time — duration is shown separately in the UI>",
+  "cooldown": "<Korean cooldown instruction, 2-3 sentences. Do NOT mention specific duration or time — duration is shown separately in the UI>",
   "estimatedCalories": <number, estimated calories burned>
 }
 
