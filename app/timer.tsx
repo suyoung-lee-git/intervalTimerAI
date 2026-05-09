@@ -83,11 +83,11 @@ export default function TimerScreen() {
             } else {
               Speech.stop();
               const duration =
-                tick.phase === "warmup"
-                  ? `${formatDuration(plan.warmupSecs)} 동안 진행합니다.`
-                  : tick.phase === "cooldown"
-                  ? `${formatDuration(plan.cooldownSecs)} 동안 진행합니다.`
-                  : "";
+                tick.phase === "warmup"   ? `${formatDuration(plan.warmupSecs)} 동안 진행합니다.` :
+                tick.phase === "work"     ? `${formatDuration(plan.workSecs)} 동안 진행합니다.` :
+                tick.phase === "rest"     ? `${formatDuration(plan.restSecs)} 동안 진행합니다.` :
+                tick.phase === "cooldown" ? `${formatDuration(plan.cooldownSecs)} 동안 진행합니다.` :
+                "";
               const text = [title, body, duration].filter(Boolean).join(". ");
               Speech.speak(text, { language: "ko-KR" });
             }
