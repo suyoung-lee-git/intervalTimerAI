@@ -2,7 +2,11 @@ import { useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
 import * as Speech from "expo-speech";
+import { Audio } from "expo-av";
 import { useRouter } from "expo-router";
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const TICK_SOUND = require("../assets/sounds/tick.wav");
 import { useTimerStore } from "../stores/timerStore";
 import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer, TimerPhase } from "../services/timer";
@@ -39,7 +43,15 @@ export default function TimerScreen() {
   const { plan, soundOption } = useRecommendStore();
   const prevPhaseRef = useRef<TimerPhase>("idle");
   const soundOptionRef = useRef(soundOption);
+  const tickSoundRef = useRef<Audio.Sound | null>(null);
   useEffect(() => { soundOptionRef.current = soundOption; }, [soundOption]);
+
+  useEffect(() => {
+    Audio.Sound.createAsync(TICK_SOUND)
+      .then(({ sound }) => { tickSoundRef.current = sound; })
+      .catch(() => {});
+    return () => { tickSoundRef.current?.unloadAsync(); };
+  }, []);
   const {
     phase,
     remainingSecs,
@@ -68,7 +80,7 @@ export default function TimerScreen() {
         if (tick.remainingSecs === 0) {
           vibrate(tick.phase === "rest" ? 4 : 8);
         } else if (tick.remainingSecs <= 3 && soundOptionRef.current !== "none") {
-          Speech.speak("틱", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
+          tickSoundRef.current?.replayAsync().catch(() => {});
         }
         if (tick.phase !== prevPhaseRef.current) {
           prevPhaseRef.current = tick.phase;
