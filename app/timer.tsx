@@ -7,6 +7,12 @@ import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer } from "../services/timer";
 import CircularGauge from "../components/CircularGauge";
 
+function vibratePhaseEnd() {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  setTimeout(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 120);
+  setTimeout(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 240);
+}
+
 const REST_MESSAGES = [
   "잘 하고 있어요! 잠깐 숨을 고르세요 💪",
   "훌륭해요! 다음 세트도 파이팅! 🔥",
@@ -52,7 +58,7 @@ export default function TimerScreen() {
       (tick) => {
         setTick(tick);
         if (tick.remainingSecs === 0) {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          vibratePhaseEnd();
         }
       },
       () => {
