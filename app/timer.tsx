@@ -60,18 +60,26 @@ export default function TimerScreen() {
   const progress =
     phaseTotalSecs > 0 ? (phaseTotalSecs - remainingSecs) / phaseTotalSecs : 0;
 
-  let exerciseName = "";
-  if (completed) {
-    exerciseName = "완료!";
-  } else if (phase === "warmup") {
-    exerciseName = "준비운동";
-  } else if (phase === "work") {
-    exerciseName = plan.exercises[(currentSet - 1) % plan.exercises.length].name;
-  } else if (phase === "rest") {
-    exerciseName = "휴식";
-  } else if (phase === "cooldown") {
-    exerciseName = "정리운동";
-  }
+  const currentExercise =
+    plan.exercises[(currentSet - 1) % plan.exercises.length];
+
+  const phaseTitle =
+    phase === "warmup"
+      ? "준비운동"
+      : phase === "cooldown"
+      ? "정리운동"
+      : phase === "work"
+      ? currentExercise.name
+      : "휴식";
+
+  const phaseDescription =
+    phase === "warmup"
+      ? plan.warmup
+      : phase === "cooldown"
+      ? plan.cooldown
+      : phase === "work"
+      ? currentExercise.tips
+      : plan.rationale;
 
   const phaseColor =
     phase === "work"
@@ -84,29 +92,21 @@ export default function TimerScreen() {
       ? styles.cooldown
       : styles.rest;
 
-  const phaseDescription =
-    phase === "warmup"
-      ? plan.warmup
-      : phase === "cooldown"
-      ? plan.cooldown
-      : plan.rationale;
-
-  const phaseTitle =
-    phase === "warmup"
-      ? "준비운동"
-      : phase === "cooldown"
-      ? "정리운동"
-      : `${plan.workSecs}초 운동 / ${plan.restSecs}초 휴식 × ${plan.sets}세트`;
+  const gaugeLabel =
+    completed ? "완료!" : phase === "work" ? "운동" : phase === "rest" ? "휴식" : phase === "warmup" ? "준비" : "정리";
 
   return (
     <View style={styles.container}>
-      <Text style={styles.plan}>{phaseTitle}</Text>
-      <Text style={styles.rationale}>{phaseDescription}</Text>
+      <Text style={[styles.phaseTitle, phaseColor]}>{phaseTitle}</Text>
+      <Text style={styles.phaseDesc}>{phaseDescription}</Text>
+      <Text style={styles.workoutConfig}>
+        {plan.workSecs}초 운동 / {plan.restSecs}초 휴식 × {plan.sets}세트
+      </Text>
 
       <View style={styles.gaugeWrapper}>
         <CircularGauge progress={completed ? 1 : progress} phase={phase} />
         <View style={styles.gaugeCenter}>
-          <Text style={[styles.exerciseName, phaseColor]}>{exerciseName}</Text>
+          <Text style={[styles.gaugeLabel, phaseColor]}>{gaugeLabel}</Text>
           <Text style={styles.time}>{remainingSecs}</Text>
           <Text style={styles.sets}>
             {phase === "work" || phase === "rest"
@@ -131,14 +131,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 24,
   },
-  plan: { fontSize: 18, fontWeight: "600", color: "#444", marginBottom: 4 },
-  rationale: {
-    fontSize: 16,
-    color: "#666",
+  phaseTitle: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 8,
     textAlign: "center",
-    marginBottom: 40,
+  },
+  phaseDesc: {
+    fontSize: 15,
+    color: "#555",
+    textAlign: "center",
     paddingHorizontal: 16,
-    lineHeight: 24,
+    lineHeight: 22,
+    marginBottom: 6,
+  },
+  workoutConfig: {
+    fontSize: 13,
+    color: "#aaa",
+    marginBottom: 32,
   },
   gaugeWrapper: {
     width: 220,
@@ -151,7 +161,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     alignItems: "center",
   },
-  exerciseName: { fontSize: 18, fontWeight: "700", marginBottom: 4 },
+  gaugeLabel: { fontSize: 18, fontWeight: "700", marginBottom: 4 },
   work: { color: "#FF3B30" },
   rest: { color: "#34C759" },
   warmup: { color: "#FFCC00" },
