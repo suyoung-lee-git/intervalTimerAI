@@ -22,6 +22,10 @@ const REST_MESSAGES = [
   "완벽해요! 이 페이스 유지하세요! 🏆",
 ];
 
+function stripEmoji(text: string): string {
+  return text.replace(/\p{Emoji}/gu, "").replace(/\s+/g, " ").trim();
+}
+
 function formatDuration(secs: number): string {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
@@ -90,7 +94,7 @@ export default function TimerScreen() {
                 tick.phase === "rest"     ? `${formatDuration(plan.restSecs)} 동안 진행합니다.` :
                 tick.phase === "cooldown" ? `${formatDuration(plan.cooldownSecs)} 동안 진행합니다.` :
                 "";
-              const text = [title, body, duration].filter(Boolean).join(". ");
+              const text = stripEmoji([title, body, duration].filter(Boolean).join(". "));
               Speech.speak(text, { language: "ko-KR" });
             }
           }
