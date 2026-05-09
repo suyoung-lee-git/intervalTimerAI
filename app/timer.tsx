@@ -7,6 +7,14 @@ import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer } from "../services/timer";
 import CircularGauge from "../components/CircularGauge";
 
+const REST_MESSAGES = [
+  "잘 하고 있어요! 잠깐 숨을 고르세요 💪",
+  "훌륭해요! 다음 세트도 파이팅! 🔥",
+  "최고예요! 몸이 회복되고 있어요 ⚡",
+  "대단해요! 조금만 더 힘내세요! 🎯",
+  "완벽해요! 이 페이스 유지하세요! 🏆",
+];
+
 function formatDuration(secs: number): string {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
@@ -71,24 +79,6 @@ export default function TimerScreen() {
   const currentExercise =
     plan.exercises[(currentSet - 1) % plan.exercises.length];
 
-  const phaseTitle =
-    phase === "warmup"
-      ? "준비운동"
-      : phase === "cooldown"
-      ? "정리운동"
-      : phase === "work"
-      ? currentExercise.name
-      : "휴식";
-
-  const phaseDescription =
-    phase === "warmup"
-      ? plan.warmup
-      : phase === "cooldown"
-      ? plan.cooldown
-      : phase === "work"
-      ? currentExercise.tips
-      : plan.rationale;
-
   const phaseColor =
     phase === "work"
       ? styles.work
@@ -100,20 +90,41 @@ export default function TimerScreen() {
       ? styles.cooldown
       : styles.rest;
 
+  const phaseDescription =
+    phase === "warmup"
+      ? plan.warmup
+      : phase === "cooldown"
+      ? plan.cooldown
+      : phase === "work"
+      ? currentExercise.tips
+      : REST_MESSAGES[(currentSet - 1) % REST_MESSAGES.length];
+
+  const subText =
+    phase === "warmup"
+      ? formatDuration(plan.warmupSecs)
+      : phase === "cooldown"
+      ? formatDuration(plan.cooldownSecs)
+      : `${plan.workSecs}초 운동 / ${plan.restSecs}초 휴식 × ${plan.sets}세트`;
+
   const gaugeLabel =
     completed ? "완료!" : phase === "work" ? "운동" : phase === "rest" ? "휴식" : phase === "warmup" ? "준비" : "정리";
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.phaseTitle, phaseColor]}>{phaseTitle}</Text>
+      {/* 타이틀 영역 */}
+      {phase === "work" ? (
+        <View style={styles.titleRow}>
+          <Text style={[styles.phaseTitle, phaseColor]}>{currentExercise.name}</Text>
+          <Text style={[styles.reps, phaseColor]}>{currentExercise.reps}</Text>
+        </View>
+      ) : (
+        <Text style={[styles.phaseTitle, phaseColor]}>
+          {phase === "warmup" ? "준비운동" : phase === "cooldown" ? "정리운동" : "휴식"}
+        </Text>
+      )}
+
       <Text style={styles.phaseDesc}>{phaseDescription}</Text>
-      <Text style={styles.workoutConfig}>
-        {phase === "warmup"
-          ? formatDuration(plan.warmupSecs)
-          : phase === "cooldown"
-          ? formatDuration(plan.cooldownSecs)
-          : `${plan.workSecs}초 운동 / ${plan.restSecs}초 휴식 × ${plan.sets}세트`}
-      </Text>
+      <Text style={styles.workoutConfig}>{subText}</Text>
 
       <View style={styles.gaugeWrapper}>
         <CircularGauge progress={completed ? 1 : progress} phase={phase} />
@@ -143,11 +154,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 24,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 8,
+    marginBottom: 8,
+  },
   phaseTitle: {
     fontSize: 22,
     fontWeight: "700",
-    marginBottom: 8,
     textAlign: "center",
+    marginBottom: 8,
+  },
+  reps: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   phaseDesc: {
     fontSize: 15,
