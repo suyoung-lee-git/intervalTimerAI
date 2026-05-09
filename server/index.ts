@@ -36,14 +36,17 @@ Always respond with a valid JSON object in this exact format (no markdown, no co
 }
 
 Guidelines:
-- warmupSecs: 120~300 seconds recommended
-- cooldownSecs: 120~300 seconds recommended
+- TOTAL TIME CONSTRAINT (MANDATORY):
+  warmupSecs + (workSecs + restSecs) × sets + cooldownSecs = goalMinutes × 60
+  Example: goalMinutes=20 → total=1200s. If warmupSecs=180, cooldownSecs=180, sets=8, workSecs=45, restSecs=45:
+  180 + (45+45)×8 + 180 = 180 + 720 + 180 = 1080 ✗ → adjust sets or workSecs/restSecs until the sum equals exactly goalMinutes×60.
+  You MUST verify the arithmetic before responding.
 - exercises: 3-5 exercises appropriate for the workout type and fitness level
 - estimatedCalories: estimate based on workout duration, intensity and average body weight (70kg)
 - Beginners: longer rest ratios (1:2 work:rest), fewer sets
 - Intermediate: balanced ratios (1:1), moderate sets
 - Advanced: shorter rest ratios (2:1), more sets
-- Tabata: fixed 20s work / 10s rest / 8 sets`;
+- Tabata: fixed 20s work / 10s rest / 8 sets (adjust warmup/cooldown to fit total time)`;
 
 const client =
   process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
@@ -67,7 +70,17 @@ app.post("/api/recommend", async (req, res) => {
     const text =
       response.content[0].type === "text" ? response.content[0].text : "";
     const cleaned = text.replace(/```json|```/g, "").trim();
-    res.json(JSON.parse(cleaned));
+    const plan = JSON.parse(cleaned);
+
+    // 목표 시간과 합계가 다를 경우 cooldownSecs로 보정
+    if (context.goalMinutes) {
+      const targetSecs = context.goalMinutes * 60;
+      const mainSecs = (plan.workSecs + plan.restSecs) * plan.sets;
+      const remaining = targetSecs - plan.warmupSecs - mainSecs;
+      plan.cooldownSecs = Math.max(0, remaining);
+    }
+
+    res.json(plan);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "추천 생성 실패" });
