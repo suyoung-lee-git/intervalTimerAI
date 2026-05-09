@@ -83,6 +83,18 @@ app.post("/api/recommend", async (req, res) => {
       plan.cooldownSecs = Math.max(0, totalSecs - plan.warmupSecs - plan.sets * perSet);
     }
 
+    // rationale에서 숫자+단위, 비율 패턴 제거
+    if (plan.rationale) {
+      plan.rationale = plan.rationale
+        .replace(/\d+\s*:\s*\d+\s*(비율|운동|휴식)?[가-힣]{0,4}/g, "")
+        .replace(/\(\s*\d+\s*:\s*\d+\s*\)/g, "")
+        .replace(/\d+\s*(초|분|세트|회)\s*[가-힣]{0,4}/g, "")
+        .replace(/,\s*,/g, ",")
+        .replace(/\.\s*,/g, ".")
+        .replace(/\s{2,}/g, " ")
+        .trim();
+    }
+
     res.json(plan);
   } catch (err) {
     console.error(err);
