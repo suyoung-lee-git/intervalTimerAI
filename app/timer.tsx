@@ -63,6 +63,8 @@ export default function TimerScreen() {
         setTick(tick);
         if (tick.remainingSecs === 0) {
           vibrate(tick.phase === "rest" ? 4 : 8);
+        } else if (tick.remainingSecs <= 3 && soundOptionRef.current !== "none") {
+          Speech.speak("틱", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
         }
         if (tick.phase !== prevPhaseRef.current) {
           prevPhaseRef.current = tick.phase;
