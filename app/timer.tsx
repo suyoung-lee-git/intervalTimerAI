@@ -91,11 +91,16 @@ export default function TimerScreen() {
       ? plan.cooldown
       : plan.rationale;
 
+  const phaseTitle =
+    phase === "warmup"
+      ? "준비운동"
+      : phase === "cooldown"
+      ? "정리운동"
+      : `${plan.workSecs}초 운동 / ${plan.restSecs}초 휴식 × ${plan.sets}세트`;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.plan}>
-        {plan.workSecs}초 운동 / {plan.restSecs}초 휴식 × {plan.sets}세트
-      </Text>
+      <Text style={styles.plan}>{phaseTitle}</Text>
       <Text style={styles.rationale}>{phaseDescription}</Text>
 
       <View style={styles.gaugeWrapper}>
