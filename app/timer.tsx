@@ -96,9 +96,7 @@ export default function TimerScreen() {
               tick.phase === "work"   ? ex.tips :
               tick.phase === "rest"   ? REST_MESSAGES[(tick.currentSet - 1) % REST_MESSAGES.length] :
               tick.phase === "cooldown" ? plan.cooldown : "";
-            if (soundOptionRef.current === "beep") {
-              Speech.speak("삐", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
-            } else {
+            if (soundOptionRef.current === "tts") {
               Speech.stop();
               const duration =
                 tick.phase === "warmup"   ? `${formatDuration(plan.warmupSecs)} 동안 진행합니다.` :
@@ -115,9 +113,7 @@ export default function TimerScreen() {
       () => {
         setCompleted();
         vibrate(12);
-        if (soundOptionRef.current === "beep") {
-          Speech.speak("삐", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
-        } else if (soundOptionRef.current === "tts") {
+        if (soundOptionRef.current === "tts") {
           Speech.stop();
           Speech.speak("운동 완료. 수고하셨습니다!", { language: "ko-KR" });
         }
