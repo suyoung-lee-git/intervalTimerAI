@@ -82,7 +82,13 @@ export default function TimerScreen() {
               Speech.speak("삐", { language: "ko-KR", rate: 3.0, pitch: 2.0 });
             } else {
               Speech.stop();
-              const text = body ? `${title}. ${body}` : title;
+              const duration =
+                tick.phase === "warmup"
+                  ? `${formatDuration(plan.warmupSecs)} 동안 진행합니다.`
+                  : tick.phase === "cooldown"
+                  ? `${formatDuration(plan.cooldownSecs)} 동안 진행합니다.`
+                  : "";
+              const text = [title, body, duration].filter(Boolean).join(". ");
               Speech.speak(text, { language: "ko-KR" });
             }
           }
