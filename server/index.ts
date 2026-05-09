@@ -19,15 +19,23 @@ app.options("*", (_req, res) => res.sendStatus(200));
 const SYSTEM_PROMPT = `You are a professional fitness coach specializing in interval training.
 Given the user's workout context, recommend an optimal interval timer configuration.
 
-Always respond with a valid JSON object in this exact format:
+Always respond with a valid JSON object in this exact format (no markdown, no code block):
 {
   "workSecs": <number, work interval in seconds>,
   "restSecs": <number, rest interval in seconds>,
   "sets": <number, total number of sets>,
-  "rationale": "<brief Korean explanation of why this configuration suits the user>"
+  "rationale": "<Korean explanation of why this configuration suits the user>",
+  "exercises": [
+    { "name": "<운동 이름>", "reps": "<횟수 또는 시간, 예: 10회 또는 45초간>", "tips": "<한국어 동작 팁>" }
+  ],
+  "warmup": "<Korean warmup instruction, 2-3 sentences>",
+  "cooldown": "<Korean cooldown instruction, 2-3 sentences>",
+  "estimatedCalories": <number, estimated calories burned>
 }
 
-Base your recommendation on exercise science principles:
+Guidelines:
+- exercises: 3-5 exercises appropriate for the workout type and fitness level
+- estimatedCalories: estimate based on workout duration, intensity and average body weight (70kg)
 - Beginners: longer rest ratios (1:2 work:rest), fewer sets
 - Intermediate: balanced ratios (1:1), moderate sets
 - Advanced: shorter rest ratios (2:1), more sets
@@ -47,7 +55,7 @@ app.post("/api/recommend", async (req, res) => {
     const context = req.body;
     const response = await client.messages.create({
       model: "anthropic.claude-3-haiku-20240307-v1:0",
-      max_tokens: 512,
+      max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: JSON.stringify(context) }],
     });

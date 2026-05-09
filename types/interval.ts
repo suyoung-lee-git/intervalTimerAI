@@ -15,9 +15,19 @@ export interface WorkoutContext {
   goal: string;
 }
 
+export interface Exercise {
+  name: string;
+  reps: string;
+  tips: string;
+}
+
 export interface IntervalPlan {
   workSecs: number;
   restSecs: number;
   sets: number;
   rationale: string;
+  exercises: Exercise[];
+  warmup: string;
+  cooldown: string;
+  estimatedCalories: number;
 }

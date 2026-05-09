@@ -48,7 +48,7 @@ export default function HomeScreen() {
       goalMinutes: Number(goalMinutes),
       goal,
     });
-    router.push("/timer");
+    router.push("/plan");
   };
 
   return (

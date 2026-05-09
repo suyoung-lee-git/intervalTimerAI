@@ -2,11 +2,11 @@
 2026-05-09
 
 ## Completed
-- 홈 화면 UI: 운동 종류·체력 수준 칩 버튼 UI
-- 타이머 화면 UI: SVG 원형 게이지 (CircularGauge)
-- 백엔드 API 서버 추가 (server/index.ts — Express + Bedrock)
-- services/claude.ts: Bedrock SDK 제거 → fetch로 서버 호출
-- Expo Go 실기기 테스트 완료 (AI 추천 정상 동작 확인)
+- 백엔드 API 서버 추가 (server/index.ts — Express + Claude 3 Haiku)
+- 홈/타이머 UI 개선 (칩 버튼, SVG 원형 게이지)
+- AI 추천 결과 상세화: exercises, warmup, cooldown, estimatedCalories 추가
+- app/plan.tsx 신규 생성 (추천 결과 상세 화면)
+- 플로우 변경: 홈 → 추천 결과(plan) → 타이머
 
 ## In Progress
 - 없음
