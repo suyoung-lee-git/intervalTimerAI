@@ -11,7 +11,7 @@ export default function PlanScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* 준비운동 */}
-      <Section title="준비운동">
+      <Section title="준비운동" duration={plan.warmupSecs}>
         <Text style={styles.body}>{plan.warmup}</Text>
       </Section>
 
@@ -42,7 +42,7 @@ export default function PlanScreen() {
       </Section>
 
       {/* 정리운동 */}
-      <Section title="정리운동">
+      <Section title="정리운동" duration={plan.cooldownSecs}>
         <Text style={styles.body}>{plan.cooldown}</Text>
       </Section>
 
@@ -57,10 +57,23 @@ export default function PlanScreen() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function formatDuration(secs: number): string {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  if (m > 0 && s > 0) return `${m}분 ${s}초`;
+  if (m > 0) return `${m}분`;
+  return `${s}초`;
+}
+
+function Section({ title, duration, children }: { title: string; duration?: number; children: React.ReactNode }) {
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {duration !== undefined && duration > 0 && (
+          <Text style={styles.sectionDuration}>{formatDuration(duration)}</Text>
+        )}
+      </View>
       {children}
     </View>
   );
@@ -74,13 +87,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
   },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
   sectionTitle: {
     fontSize: 13,
     fontWeight: "700",
     color: "#007AFF",
-    marginBottom: 10,
     textTransform: "uppercase",
     letterSpacing: 0.5,
+  },
+  sectionDuration: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#007AFF",
   },
   body: { fontSize: 15, color: "#333", lineHeight: 22 },
   config: {
