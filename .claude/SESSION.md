@@ -1,37 +1,32 @@
 ## Last Updated
-2026-05-07
+2026-05-09
 
 ## Completed
-- CLAUDE.md 초안 작성 (프로젝트 개요, 기술 스택, 아키텍처)
-- AWS Bedrock 연동 방식으로 변경
-- 개발 세션 이어받기 시스템 구축
-- 프로젝트 초기화 완료 (Expo + TypeScript + Zustand + Bedrock SDK)
-- 스켈레톤 파일 전체 생성 (app/, services/, stores/, types/)
-- ESLint + ts-jest 설정 완료
-- tsc / eslint / jest 검증 전부 통과
-- 첫 커밋 완료 (42656b6)
+- 홈 화면 UI: 운동 종류·체력 수준 칩 버튼 UI
+- 타이머 화면 UI: SVG 원형 게이지 (CircularGauge)
+- 백엔드 API 서버 추가 (server/index.ts — Express + Bedrock)
+- services/claude.ts: Bedrock SDK 제거 → fetch로 서버 호출
+- Expo Go 실기기 테스트 완료 (AI 추천 정상 동작 확인)
 
 ## In Progress
 - 없음
 
 ## Next
-- AWS 키 설정 및 앱 실행 (아래 순서로 진행)
-  1. `! cp .env.local.example .env.local` 실행 후 .env.local에 AWS 키 직접 입력
-  2. app.json → app.config.js 전환 (dotenv로 .env.local 로드)
-  3. services/claude.ts에서 process.env → Constants.expoConfig.extra 로 변경
-  4. npx expo start 실행
-- 홈 화면 UI 개선 (운동 종류/체력 수준 선택 버튼)
-- 타이머 화면 UI 개선 (진행률 원형 게이지)
-- 빌드 & 실기기 테스트
+- git 커밋
+- 앱 완성도 개선 (로딩 UX, 에러 처리 등)
+- 프로덕션 배포 (EAS Build / 서버 PM2 설정)
 
 ## Decisions & Context
-- AWS Bedrock 사용 (직접 Anthropic API 대신) — 사용자 요구사항
-- Expo Router 사용 — 파일 기반 라우팅으로 화면 추가가 단순함
-- Zustand 사용 — Redux 대비 보일러플레이트 최소화, 타이머처럼 잦은 업데이트에 적합
-- jest-expo 대신 ts-jest 사용 — expo winter runtime이 node 환경에서 충돌, 순수 TS 서비스 테스트에는 ts-jest가 적합
-- Zustand 액션을 useEffect deps에 포함 — 안정 참조이므로 무한 루프 없음
-- eslint.config.js (flat config) 사용 — ESLint v10이 기본으로 요구
-- AWS 키는 app.config.js + Constants.expoConfig.extra 방식으로 주입 예정 (보안상 process.env 직접 사용 불가)
+- AnthropicBedrock 생성자 오버로드 타입 제약으로 키 유무에 따라 분기 처리
+  (awsAccessKey + awsSecretKey 동시 제공 or 둘 다 생략 — 하나만 제공은 타입 에러)
+- react-native-svg 설치 시 npm peer dependency 충돌 → .npmrc에 legacy-peer-deps=true 추가
+- CircularGauge: phaseTotalSecs(현재 단계 총 시간)를 timer.ts tick에 추가해서 진행률 계산
 
 ## Blockers
 - 없음
+
+## Web 테스트 환경
+- npx expo start --web --port 8081 로 실행
+- http://3.34.178.155:8081 에서 UI 확인 가능 (AWS 보안그룹 8081 포트 오픈 필요)
+- AnthropicBedrock 클라이언트를 lazy 초기화(getClient 함수)로 변경 — 브라우저 환경에서 앱 시작 시 에러 방지
+  (AI 호출은 모바일에서만 정상 동작, 웹은 UI 확인용)

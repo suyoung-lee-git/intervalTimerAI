@@ -5,6 +5,7 @@ interface TimerState {
   running: boolean;
   phase: TimerPhase;
   remainingSecs: number;
+  phaseTotalSecs: number;
   currentSet: number;
   totalSets: number;
   completed: boolean;
@@ -13,6 +14,7 @@ interface TimerState {
   setTick: (tick: {
     phase: TimerPhase;
     remainingSecs: number;
+    phaseTotalSecs: number;
     currentSet: number;
     totalSets: number;
   }) => void;
@@ -25,6 +27,7 @@ export const useTimerStore = create<TimerState>((set) => ({
   running: false,
   phase: "idle",
   remainingSecs: 0,
+  phaseTotalSecs: 0,
   currentSet: 1,
   totalSets: 1,
   completed: false,
@@ -39,6 +42,7 @@ export const useTimerStore = create<TimerState>((set) => ({
       running: false,
       phase: "idle",
       remainingSecs: 0,
+      phaseTotalSecs: 0,
       currentSet: 1,
       completed: false,
       stopFn: null,

@@ -7,10 +7,26 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useRecommendStore } from "../stores/recommendStore";
 import { FitnessLevel, WorkoutType } from "../types/interval";
+
+const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = [
+  { value: "HIIT", label: "HIIT" },
+  { value: "tabata", label: "타바타" },
+  { value: "circuit", label: "서킷" },
+  { value: "strength", label: "근력" },
+  { value: "cardio", label: "유산소" },
+  { value: "custom", label: "커스텀" },
+];
+
+const FITNESS_LEVELS: { value: FitnessLevel; label: string }[] = [
+  { value: "beginner", label: "초급" },
+  { value: "intermediate", label: "중급" },
+  { value: "advanced", label: "고급" },
+];
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -36,22 +52,36 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.label}>운동 종류</Text>
-      <TextInput
-        style={styles.input}
-        value={workoutType}
-        onChangeText={(v) => setWorkoutType(v as WorkoutType)}
-        placeholder="HIIT, tabata, cardio ..."
-      />
+      <View style={styles.chipRow}>
+        {WORKOUT_TYPES.map((item) => (
+          <TouchableOpacity
+            key={item.value}
+            style={[styles.chip, workoutType === item.value && styles.chipActive]}
+            onPress={() => setWorkoutType(item.value)}
+          >
+            <Text style={[styles.chipText, workoutType === item.value && styles.chipTextActive]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <Text style={styles.label}>체력 수준</Text>
-      <TextInput
-        style={styles.input}
-        value={fitnessLevel}
-        onChangeText={(v) => setFitnessLevel(v as FitnessLevel)}
-        placeholder="beginner / intermediate / advanced"
-      />
+      <View style={styles.chipRow}>
+        {FITNESS_LEVELS.map((item) => (
+          <TouchableOpacity
+            key={item.value}
+            style={[styles.chip, styles.chipWide, fitnessLevel === item.value && styles.chipActive]}
+            onPress={() => setFitnessLevel(item.value)}
+          >
+            <Text style={[styles.chipText, fitnessLevel === item.value && styles.chipTextActive]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
       <Text style={styles.label}>목표 시간 (분)</Text>
       <TextInput
@@ -81,13 +111,26 @@ export default function HomeScreen() {
           <Text style={styles.buttonText}>AI 추천 받기</Text>
         )}
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, backgroundColor: "#fff" },
-  label: { fontSize: 14, fontWeight: "600", marginTop: 16, marginBottom: 4 },
+  container: { padding: 24, backgroundColor: "#fff", paddingBottom: 48 },
+  label: { fontSize: 14, fontWeight: "600", marginTop: 20, marginBottom: 8 },
+  chipRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  chip: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: "#ddd",
+    backgroundColor: "#fff",
+  },
+  chipWide: { flex: 1, alignItems: "center" },
+  chipActive: { borderColor: "#007AFF", backgroundColor: "#007AFF" },
+  chipText: { fontSize: 14, color: "#444" },
+  chipTextActive: { color: "#fff", fontWeight: "600" },
   input: {
     borderWidth: 1,
     borderColor: "#ddd",

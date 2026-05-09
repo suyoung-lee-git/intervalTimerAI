@@ -1,0 +1,20 @@
+{
+  "name": "intervaltimerai-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node index.ts",
+    "dev": "ts-node-dev --respawn index.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/bedrock-sdk": "^0.29.1",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.21",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.9.2"
+  }
+}

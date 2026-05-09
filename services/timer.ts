@@ -5,6 +5,7 @@ export interface TimerTick {
   remainingSecs: number;
   currentSet: number;
   totalSets: number;
+  phaseTotalSecs: number;
 }
 
 export function startTimer(
@@ -19,7 +20,8 @@ export function startTimer(
   let remaining = workSecs;
 
   const interval = setInterval(() => {
-    onTick({ phase, remainingSecs: remaining, currentSet, totalSets });
+    const phaseTotalSecs = phase === "work" ? workSecs : restSecs;
+    onTick({ phase, remainingSecs: remaining, currentSet, totalSets, phaseTotalSecs });
 
     remaining -= 1;
 
