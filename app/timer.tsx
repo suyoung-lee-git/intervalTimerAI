@@ -129,6 +129,12 @@ export default function TimerScreen() {
     return () => { stop(); Speech.stop(); };
   }, [plan, reset, setTick, setStopFn, setCompleted, setRunning]);
 
+  useEffect(() => {
+    if (!completed) return;
+    const t = setTimeout(() => router.back(), 1500);
+    return () => clearTimeout(t);
+  }, [completed, router]);
+
   const handleStop = () => {
     stopFn?.();
     reset();
