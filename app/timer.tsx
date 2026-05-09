@@ -7,10 +7,10 @@ import { useRecommendStore } from "../stores/recommendStore";
 import { startTimer } from "../services/timer";
 import CircularGauge from "../components/CircularGauge";
 
-function vibratePhaseEnd() {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-  setTimeout(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 120);
-  setTimeout(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), 240);
+function vibrate(pulses: number) {
+  for (let i = 0; i < pulses; i++) {
+    setTimeout(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy), i * 120);
+  }
 }
 
 const REST_MESSAGES = [
@@ -58,7 +58,7 @@ export default function TimerScreen() {
       (tick) => {
         setTick(tick);
         if (tick.remainingSecs === 0) {
-          vibratePhaseEnd();
+          vibrate(tick.phase === "rest" ? 4 : 8);
         }
       },
       () => {
