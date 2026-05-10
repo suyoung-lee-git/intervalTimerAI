@@ -13,6 +13,9 @@ export async function getIntervalRecommendation(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(context),
   });
-  if (!res.ok) throw new Error(`서버 오류: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`서버 오류 ${res.status}: ${body.slice(0, 200)}`);
+  }
   return res.json() as Promise<IntervalPlan>;
 }

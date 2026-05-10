@@ -48,6 +48,11 @@ export default function HomeScreen() {
       goalMinutes: Number(goalMinutes),
       goal,
     });
+    const { plan, error } = useRecommendStore.getState();
+    if (error || !plan) {
+      Alert.alert("오류", error ?? "추천을 가져오는데 실패했습니다.");
+      return;
+    }
     router.push("/plan");
   };
 

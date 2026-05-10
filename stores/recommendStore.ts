@@ -24,8 +24,9 @@ export const useRecommendStore = create<RecommendState>((set) => ({
     try {
       const plan = await getIntervalRecommendation(context);
       set({ plan, loading: false });
-    } catch {
-      set({ error: "추천을 가져오는데 실패했습니다.", loading: false });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      set({ error: msg, loading: false });
     }
   },
 

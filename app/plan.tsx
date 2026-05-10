@@ -13,7 +13,16 @@ export default function PlanScreen() {
   const router = useRouter();
   const { plan, soundOption, setSoundOption } = useRecommendStore();
 
-  if (!plan) return null;
+  const { error } = useRecommendStore();
+  if (!plan) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 24 }}>
+        <Text style={{ color: "#FF3B30", fontSize: 15, textAlign: "center" }}>
+          {error ?? "추천 데이터를 불러오지 못했습니다."}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
