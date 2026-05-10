@@ -13,13 +13,13 @@ import { useRouter } from "expo-router";
 import { useRecommendStore } from "../stores/recommendStore";
 import { FitnessLevel, WorkoutType } from "../types/interval";
 
-const WORKOUT_TYPES: { value: WorkoutType; label: string }[] = [
-  { value: "HIIT", label: "HIIT" },
-  { value: "tabata", label: "타바타" },
-  { value: "circuit", label: "서킷" },
-  { value: "strength", label: "근력" },
-  { value: "cardio", label: "유산소" },
-  { value: "custom", label: "커스텀" },
+const WORKOUT_TYPES: { value: WorkoutType; label: string; description: string }[] = [
+  { value: "HIIT", label: "HIIT", description: "짧은 고강도 운동과 휴식을 반복. 심폐 기능 및 지방 연소에 효과적" },
+  { value: "tabata", label: "타바타", description: "20초 전력 운동 + 10초 휴식, 8라운드. 극한의 단시간 운동" },
+  { value: "circuit", label: "서킷", description: "여러 운동을 순서대로 쉬지 않고 수행. 전신 근력과 지구력 향상" },
+  { value: "strength", label: "근력", description: "충분한 휴식으로 근육 회복 보장. 근비대 및 근력 증가 목적" },
+  { value: "cardio", label: "유산소", description: "낮은 강도의 지속적 운동. 지방 연소 및 심폐 지구력 향상" },
+  { value: "custom", label: "커스텀", description: "AI가 입력한 목표에 맞게 자유롭게 구성" },
 ];
 
 const FITNESS_LEVELS: { value: FitnessLevel; label: string }[] = [
@@ -54,6 +54,11 @@ export default function HomeScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.label}>운동 종류</Text>
+      <View style={styles.descriptionBox}>
+        <Text style={styles.descriptionText}>
+          {WORKOUT_TYPES.find((t) => t.value === workoutType)?.description}
+        </Text>
+      </View>
       <View style={styles.chipRow}>
         {WORKOUT_TYPES.map((item) => (
           <TouchableOpacity
@@ -131,6 +136,13 @@ const styles = StyleSheet.create({
   chipActive: { borderColor: "#007AFF", backgroundColor: "#007AFF" },
   chipText: { fontSize: 14, color: "#444" },
   chipTextActive: { color: "#fff", fontWeight: "600" },
+  descriptionBox: {
+    backgroundColor: "#F0F6FF",
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+  },
+  descriptionText: { fontSize: 13, color: "#444", lineHeight: 18 },
   input: {
     borderWidth: 1,
     borderColor: "#ddd",
