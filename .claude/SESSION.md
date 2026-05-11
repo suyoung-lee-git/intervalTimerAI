@@ -1,30 +1,27 @@
 ## Last Updated
-2026-05-09
+2026-05-11
 
 ## Completed
-- SYSTEM_PROMPT 강화: rationale/warmup/cooldown 텍스트에 숫자·단위 STRICTLY FORBIDDEN 명시
-- services/timer.ts: startTimer 시작 시 즉시 첫 tick 발송 — idle phase 1초 깜빡임 제거
-- server/index.ts: rationale 서버측 숫자 제거 regex 추가
-- 사운드 옵션 (none/beep/tts), TTS 읽기 순서 (타이틀→내용→시간), 이모지 제거
-- 종료 3초전 틱틱틱 소리 (work: tick.wav, rest: tick_rest.wav)
+- ngrok 터널 제거 → 공인 IP 직접 접속 방식으로 전환
+- start.sh: 서버 시작 시 공인 IP 자동 감지, localtunnel/ngrok 의존 제거
+- qr-server.js: EXPO_IP 환경변수로 동적 QR URL 생성
+- app.config.js: apiUrl 기본값을 localhost:3000으로 변경 (API_URL 환경변수로 주입)
 
 ## In Progress
 - 없음
 
 ## Next
-- git 커밋 & push
-- 앱 완성도 개선 (로딩 UX, 에러 처리 등)
+- 앱 완성도 개선 (로딩 UX 등)
 - 프로덕션 배포 (EAS Build / 서버 PM2 설정)
 
 ## Decisions & Context
-- warmupSecs/cooldownSecs가 0이면 해당 phase 건너뜀 (서버 응답이 0을 반환해도 안전하게 동작)
-- 운동 이름은 (currentSet - 1) % exercises.length 순환 — 세트 수 > 운동 수여도 안전
+- warmupSecs/cooldownSecs가 0이면 해당 phase 건너뜀
+- 운동 이름은 (currentSet - 1) % exercises.length 순환
+- API 접근 구조: 앱 → http://<PUBLIC_IP>:3000 (직접 접속)
+  - ngrok 공용 토큰(ERR_NGROK_108) 문제로 터널 방식 폐기
+  - AWS 보안그룹 8081(Metro), 3000(API), 8082(QR) 포트 오픈 전제
+- 서버 시작: 프로젝트 루트에서 ./start.sh 실행
+  - start.sh가 curl ifconfig.me로 공인 IP 감지 후 각 서비스에 주입
 
 ## Blockers
 - 없음
-
-## Web 테스트 환경
-- npx expo start --web --port 8081 로 실행
-- http://3.34.178.155:8081 에서 UI 확인 가능 (AWS 보안그룹 8081 포트 오픈 필요)
-- AnthropicBedrock 클라이언트를 lazy 초기화(getClient 함수)로 변경 — 브라우저 환경에서 앱 시작 시 에러 방지
-  (AI 호출은 모바일에서만 정상 동작, 웹은 UI 확인용)

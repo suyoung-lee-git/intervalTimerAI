@@ -1,5 +1,8 @@
 const http = require('http');
 
+const ip = process.env.EXPO_IP || 'localhost';
+const expoUrl = `exp://${ip}:8081`;
+
 const html = `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -29,10 +32,10 @@ const html = `<!DOCTYPE html>
   <h1>Interval Timer AI</h1>
   <p>아래 QR 코드를 스캔하여 앱에 접속하세요</p>
   <div id="qrcode"></div>
-  <div class="url">exp://f6x5xuo-anonymous-8081.exp.direct</div>
+  <div class="url">${expoUrl}</div>
   <script>
     new QRCode(document.getElementById("qrcode"), {
-      text: "exp://f6x5xuo-anonymous-8081.exp.direct",
+      text: "${expoUrl}",
       width: 240,
       height: 240,
       colorDark: "#000000",
@@ -46,5 +49,5 @@ http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
   res.end(html);
 }).listen(8082, () => {
-  console.log('QR server running on port 8082');
+  console.log(`QR server running on port 8082 — ${expoUrl}`);
 });

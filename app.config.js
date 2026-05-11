@@ -31,7 +31,7 @@ module.exports = {
     },
     plugins: ["expo-router"],
     extra: {
-      apiUrl: process.env.API_URL ?? "https://f6x5xuo-anonymous-8081.exp.direct",
+      apiUrl: process.env.API_URL ?? "http://localhost:3000",
     },
   },
 };
