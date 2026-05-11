@@ -1,0 +1,19 @@
+[Unit]
+Description=Interval Timer AI Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/project/intervalTimerAI
+Environment="PATH=/home/ubuntu/.npm-global/bin:/usr/local/bin:/usr/bin:/bin"
+ExecStart=/home/ubuntu/project/intervalTimerAI/start.sh
+ExecStop=/home/ubuntu/project/intervalTimerAI/stop.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
