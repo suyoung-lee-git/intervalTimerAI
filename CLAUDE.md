@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Tech Stack
 
 - **Frontend**: React Native (Expo) + TypeScript
-- **AI**: AWS Bedrock (`anthropic.claude-sonnet-4-6-20250514-v1:0`) — 인터벌 추천 생성
+- **AI**: AWS Bedrock (`anthropic.claude-3-haiku-20240307-v1:0`) — 인터벌 추천 생성
 - **State**: Zustand
 - **Navigation**: Expo Router (file-based)
 
@@ -77,7 +77,7 @@ const client = new AnthropicBedrock({
 });
 
 const response = await client.messages.create({
-  model: "anthropic.claude-sonnet-4-6-20250514-v1:0",
+  model: "anthropic.claude-3-haiku-20240307-v1:0",
   max_tokens: 1024,
   system: [
     {
